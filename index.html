@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kairos Proposal — LP制作・コーディング体制のご提案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-deep: #0B2042;
+    --navy-mid: #13315C;
+    --blue-soft: #8DA9C4;
+    --bg-paper: #EEF2F6;
+    --bg-paper-2: #E3E9F0;
+    --accent: #FF6B35;
+    --accent-dim: #FFE0CF;
+    --ink: #10213B;
+    --ink-soft: #4C5F7A;
+    --line: rgba(19,49,92,0.14);
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--ink);
+    background: var(--bg-paper);
+    line-height: 1.85;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  h1,h2,h3,h4{
+    font-family: 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+  }
+
+  .mono{
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .eng{
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  a{ color: inherit; text-decoration: none; }
+
+  .wrap{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ===== HERO ===== */
+  .hero{
+    position: relative;
+    background:
+      repeating-linear-gradient(0deg, rgba(141,169,196,0.08) 0px, rgba(141,169,196,0.08) 1px, transparent 1px, transparent 64px),
+      repeating-linear-gradient(90deg, rgba(141,169,196,0.08) 0px, rgba(141,169,196,0.08) 1px, transparent 1px, transparent 64px),
+      linear-gradient(160deg, var(--navy-deep) 0%, var(--navy-mid) 62%, #1A3C6E 100%);
+    color: #F4F7FB;
+    padding: 110px 0 130px;
+    overflow: hidden;
+  }
+
+  .hero::before{
+    content: "";
+    position: absolute;
+    top: -120px;
+    right: -120px;
+    width: 420px;
+    height: 420px;
+    border: 1px solid rgba(255,107,53,0.35);
+    border-radius: 50%;
+  }
+  .hero::after{
+    content: "";
+    position: absolute;
+    bottom: -160px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    border: 1px solid rgba(141,169,196,0.3);
+    transform: rotate(18deg);
+  }
+
+  .hero-tag{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12.5px;
+    letter-spacing: 0.22em;
+    color: var(--accent);
+    background: rgba(255,107,53,0.08);
+    border: 1px solid rgba(255,107,53,0.4);
+    padding: 7px 16px;
+    border-radius: 2px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero h1{
+    position: relative;
+    z-index: 2;
+    font-size: clamp(32px, 5.4vw, 58px);
+    line-height: 1.35;
+    margin: 30px 0 26px;
+    color: #FFFFFF;
+  }
+  .hero h1 .accent{
+    color: var(--accent);
+  }
+  .hero h1 .bracket{
+    color: var(--blue-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 400;
+  }
+
+  .hero p.lead{
+    position: relative;
+    z-index: 2;
+    max-width: 620px;
+    font-size: 16.5px;
+    color: #D8E1EC;
+    font-weight: 300;
+    line-height: 2;
+  }
+
+  .hero-from{
+    position: relative;
+    z-index: 2;
+    margin-top: 46px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 13.5px;
+    color: var(--blue-soft);
+  }
+  .hero-from .mark{
+    width: 40px; height: 40px;
+    border: 1px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    border-radius: 2px;
+  }
+
+  /* ===== SECTION COMMON ===== */
+  section{
+    padding: 96px 0;
+  }
+  .section-head{
+    margin-bottom: 56px;
+  }
+  .kicker{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12.5px;
+    letter-spacing: 0.24em;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 14px;
+  }
+  .section-head h2{
+    font-size: clamp(24px, 3.4vw, 34px);
+    color: var(--navy-deep);
+    line-height: 1.5;
+  }
+  .section-head .sub{
+    margin-top: 16px;
+    color: var(--ink-soft);
+    font-size: 15px;
+    max-width: 640px;
+  }
+
+  /* ===== UNDERSTANDING ===== */
+  .understand{
+    background: #fff;
+  }
+  .u-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .u-item{
+    background: #fff;
+    padding: 32px 30px;
+  }
+  .u-item .num{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .u-item h3{
+    margin: 10px 0 12px;
+    font-size: 17px;
+    color: var(--navy-deep);
+    font-weight: 700;
+  }
+  .u-item p{
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+
+  .u-note{
+    margin-top: 44px;
+    padding: 28px 32px;
+    background: var(--navy-deep);
+    color: #EEF2F6;
+    position: relative;
+    border-left: 4px solid var(--accent);
+  }
+  .u-note p{
+    font-size: 15px;
+    color: #D8E1EC;
+    font-weight: 300;
+  }
+  .u-note strong{
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* ===== VALUE CARDS ===== */
+  .value{
+    background: var(--bg-paper-2);
+  }
+  .v-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .v-card{
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 34px 26px;
+    position: relative;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .v-card:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(11,32,66,0.1);
+  }
+  .v-card .idx{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--blue-soft);
+    position: absolute;
+    top: 20px; right: 22px;
+  }
+  .v-card .ico{
+    width: 44px; height: 44px;
+    border-radius: 2px;
+    background: linear-gradient(135deg, var(--navy-mid), var(--navy-deep));
+    display:flex; align-items:center; justify-content:center;
+    color: var(--accent);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  .v-card h3{
+    font-size: 16.5px;
+    color: var(--navy-deep);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .v-card p{
+    font-size: 13.8px;
+    color: var(--ink-soft);
+  }
+  .v-card.wide{
+    grid-column: span 1;
+  }
+
+  @media (max-width: 860px){
+    .v-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px){
+    .v-grid{ grid-template-columns: 1fr; }
+    .u-grid{ grid-template-columns: 1fr; }
+  }
+
+  /* ===== FLOW ===== */
+  .flow{
+    background: #fff;
+  }
+  .flow-list{
+    position: relative;
+    padding-left: 36px;
+  }
+  .flow-list::before{
+    content:"";
+    position: absolute;
+    left: 7px; top: 10px; bottom: 10px;
+    width: 1px;
+    background: var(--line);
+  }
+  .flow-step{
+    position: relative;
+    padding-bottom: 46px;
+  }
+  .flow-step:last-child{ padding-bottom: 0; }
+  .flow-step::before{
+    content:"";
+    position: absolute;
+    left: -36px; top: 4px;
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--accent);
+  }
+  .flow-step .fl-top{
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .flow-step .fl-step-no{
+    font-family: 'Space Grotesk', sans-serif;
+    color: var(--accent);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+  .flow-step h3{
+    font-size: 17.5px;
+    color: var(--navy-deep);
+  }
+  .flow-step .fl-time{
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: var(--bg-paper-2);
+    padding: 3px 10px;
+  }
+  .flow-step p{
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    max-width: 620px;
+  }
+
+  .flow-foot{
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .flow-foot div{
+    border: 1px dashed var(--line);
+    padding: 18px 20px;
+    text-align: center;
+  }
+  .flow-foot .f-label{
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.06em;
+  }
+  .flow-foot .f-value{
+    margin-top: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    color: var(--navy-deep);
+    font-weight: 700;
+  }
+  @media (max-width: 700px){
+    .flow-foot{ grid-template-columns: 1fr; }
+    .fl-time{ margin-left: 0 !important; }
+  }
+
+  /* ===== CLOSING ===== */
+  .closing{
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 26px),
+      linear-gradient(160deg, var(--navy-deep), #14233F 80%);
+    color: #EEF2F6;
+    text-align: center;
+    position: relative;
+  }
+  .closing .wrap{
+    position: relative;
+    z-index: 1;
+  }
+  .closing .kicker{
+    color: var(--accent);
+  }
+  .closing h2{
+    font-size: clamp(24px, 4vw, 36px);
+    color: #fff;
+    margin: 18px 0 20px;
+  }
+  .closing p.sub{
+    color: #C9D4E2;
+    font-size: 15px;
+    max-width: 560px;
+    margin: 0 auto 40px;
+    font-weight: 300;
+  }
+
+  .info-list{
+    display: inline-block;
+    text-align: left;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 28px 32px;
+    margin-bottom: 44px;
+  }
+  .info-list li{
+    list-style: none;
+    font-size: 13.5px;
+    color: #D8E1EC;
+    padding: 6px 0;
+    display: flex;
+    gap: 10px;
+  }
+  .info-list li::before{
+    content: "//";
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+  }
+
+  .cta-btn{
+    display: inline-block;
+    background: var(--accent);
+    color: #1A1304;
+    font-weight: 700;
+    padding: 18px 48px;
+    font-size: 15.5px;
+    letter-spacing: 0.04em;
+    border-radius: 2px;
+    box-shadow: 0 14px 30px rgba(255,107,53,0.3);
+    transition: transform .2s ease;
+  }
+  .cta-btn:hover{
+    transform: translateY(-3px);
+  }
+
+  .closing .foot-note{
+    margin-top: 30px;
+    font-size: 12px;
+    color: #7D8EA6;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.08em;
+  }
+
+  footer{
+    background: #0A1A33;
+    color: #6E8099;
+    text-align: center;
+    padding: 26px 0;
+    font-size: 12px;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 700px){
+    .hero{ padding: 80px 0 90px; }
+    section{ padding: 70px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="hero-tag mono">KAIROS &nbsp;//&nbsp; PROPOSAL FOR YOUR LP PROJECT</span>
+    <h1>
+      <span class="bracket">{</span> 1px のズレが、<br>
+      コンバージョンの差になる。<span class="accent">}</span>
+    </h1>
+    <p class="lead">
+      御社が募集されている「LP制作・HTML/CSSコーディング担当者」の案件を拝見し、
+      Kairos（Web制作・システム開発チーム）よりご提案させていただきます。<br>
+      私たちは、デザインを“寸分違わず”成果に変換するコーディングパートナーです。
+    </p>
+    <div class="hero-from">
+      <div class="mark eng">K</div>
+      <div>
+        Kairos — Web制作・システム開発チーム<br>
+        EC／メーカー領域のLPコーディング実務を主軸に対応しています。
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="understand">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker eng">01 / UNDERSTANDING</span>
+      <h2>この募集の行間にある、本当に求められていること。</h2>
+      <p class="sub">
+        募集要項を拝読し、御社が探しているのは単発の「作業者」ではなく、
+        複数クライアント・複数案件を安心して任せられる「継続パートナー」だと理解しました。
+      </p>
+    </div>
+
+    <div class="u-grid">
+      <div class="u-item">
+        <span class="num mono">01</span>
+        <h3>支給デザインの正確な再現</h3>
+        <p>構成案・デザインデータをそのまま形にする精度は、EC／メーカー案件において御社のブランド信頼を左右する部分だと理解しています。</p>
+      </div>
+      <div class="u-item">
+        <span class="num mono">02</span>
+        <h3>保守性と引き継ぎやすさ</h3>
+        <p>継続依頼・複数案件の運用を前提とする以上、誰が見ても分かるマークアップと命名規則が不可欠であると捉えています。</p>
+      </div>
+      <div class="u-item">
+        <span class="num mono">03</span>
+        <h3>レスポンシブ品質のブレのなさ</h3>
+        <p>PC・スマートフォンだけでなく、実機差・ブラウザ差まで含めた表示崩れゼロの納品を前提条件として捉えています。</p>
+      </div>
+      <div class="u-item">
+        <span class="num mono">04</span>
+        <h3>窓口の安定性・納期遵守</h3>
+        <p>マーケティング支援という性質上、広告出稿スケジュールに直結する納期厳守とスムーズな連絡体制が重要だと考えています。</p>
+      </div>
+    </div>
+
+    <div class="u-note">
+      <p>
+        <strong>御社が本当に必要としているのは、</strong>
+        案件ごとに探し直す外注先ではなく、「連絡すれば一定品質で返ってくる」制作ラインそのものだと考えています。
+        Kairosは、この継続的な体制構築のご提案としてお声掛けさせていただきました。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="value">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker eng">02 / VALUE</span>
+      <h2>Kairosがご提供できること</h2>
+      <p class="sub">コーディング単体から、構成案を踏まえたデザイン制作まで。案件規模に応じて柔軟に対応範囲を調整します。</p>
+    </div>
+
+    <div class="v-grid">
+      <div class="v-card">
+        <span class="idx mono">001</span>
+        <div class="ico eng">01</div>
+        <h3>ピクセルパーフェクトな実装力</h3>
+        <p>支給デザイン（Figma／XD／PSD等）の余白・フォント・階調まで忠実に再現。デザイナーの意図を崩さないコーディングを徹底します。</p>
+      </div>
+      <div class="v-card">
+        <span class="idx mono">002</span>
+        <div class="ico eng">02</div>
+        <h3>レスポンシブ設計の精度</h3>
+        <p>PC／スマートフォンはもちろん、タブレット帯のブレークポイントまで想定し、どの端末でも破綻しないレイアウトを構築します。</p>
+      </div>
+      <div class="v-card">
+        <span class="idx mono">003</span>
+        <div class="ico eng">03</div>
+        <h3>保守性を前提とした実装</h3>
+        <p>命名規則・構造の統一、コメント設計により、後任者や社内運用担当者でも扱いやすいソースコードを納品します。</p>
+      </div>
+      <div class="v-card">
+        <span class="idx mono">004</span>
+        <div class="ico eng">04</div>
+        <h3>JS演出・計測タグ実装</h3>
+        <p>スクロールアニメーション、フォームのバリデーション、各種計測タグの設置まで、成果計測を見据えた実装に対応します。</p>
+      </div>
+      <div class="v-card">
+        <span class="idx mono">05</span>
+        <div class="ico eng">05</div>
+        <h3>デザイン〜コーディング一貫対応</h3>
+        <p>構成案からのデザイン制作、既存LPの改修・修正まで、案件内容に応じてチーム体制で柔軟に対応可能です。</p>
+      </div>
+      <div class="v-card">
+        <span class="idx mono">06</span>
+        <div class="ico eng">06</div>
+        <h3>継続運用に耐える対応力</h3>
+        <p>複数案件の並行進行、月次の継続依頼にも対応できる体制を整えており、窓口を一本化してご相談いただけます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="flow">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker eng">03 / PROCESS</span>
+      <h2>ご依頼から納品までの流れ</h2>
+      <p class="sub">案件ごとの依頼範囲（コーディングのみ／デザイン＋コーディング）に応じて柔軟に調整いたします。</p>
+    </div>
+
+    <div class="flow-list">
+      <div class="flow-step">
+        <div class="fl-top">
+          <span class="fl-step-no mono">STEP 01</span>
+          <h3>ヒアリング・要件確認</h3>
+          <span class="fl-time mono">1〜2営業日</span>
+        </div>
+        <p>構成案・デザインデータ・必要な実装範囲（JS演出、フォーム、計測タグ等）を確認し、お見積もりとスケジュールをご提示します。</p>
+      </div>
+      <div class="flow-step">
+        <div class="fl-top">
+          <span class="fl-step-no mono">STEP 02</span>
+          <h3>コーディング・実装</h3>
+          <span class="fl-time mono">3〜7営業日</span>
+        </div>
+        <p>レスポンシブ対応・アニメーション実装を含めて制作を進行。必要に応じて途中経過を共有し、認識齟齬を防ぎます。</p>
+      </div>
+      <div class="flow-step">
+        <div class="fl-top">
+          <span class="fl-step-no mono">STEP 03</span>
+          <h3>動作確認・クロスブラウザチェック</h3>
+          <span class="fl-time mono">1営業日</span>
+        </div>
+        <p>主要ブラウザ・デバイスでの表示崩れ、挙動不良がないかを確認し、必要な微調整を行います。</p>
+      </div>
+      <div class="flow-step">
+        <div class="fl-top">
+          <span class="fl-step-no mono">STEP 04</span>
+          <h3>納品</h3>
+          <span class="fl-time mono">即日</span>
+        </div>
+        <p>ソースコード一式を整理の上、納品形式に合わせてお渡しします。修正対応も別途ご相談可能です。</p>
+      </div>
+      <div class="flow-step">
+        <div class="fl-top">
+          <span class="fl-step-no mono">STEP 05</span>
+          <h3>継続運用・改修対応</h3>
+          <span class="fl-time mono">随時</span>
+        </div>
+        <p>既存LPの修正・改修、新規案件のご依頼など、継続的な制作パートナーとして長期的にご対応いたします。</p>
+      </div>
+    </div>
+
+    <div class="flow-foot">
+      <div>
+        <div class="f-label mono">LP1本の目安</div>
+        <div class="f-value">3〜10営業日</div>
+      </div>
+      <div>
+        <div class="f-label mono">対応範囲</div>
+        <div class="f-value" style="font-size:16px;">コーディング単体〜一貫対応</div>
+      </div>
+      <div>
+        <div class="f-label mono">稼働状況</div>
+        <div class="f-value" style="font-size:16px;">月間複数件 対応可</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="closing" id="contact">
+  <div class="wrap">
+    <span class="kicker eng">04 / NEXT ACTION</span>
+    <h2>まずは一度、お話しさせてください。</h2>
+    <p class="sub">応募にあたり必要な情報を、あらかじめ整理してご連絡させていただきます。</p>
+
+    <ul class="info-list">
+      <li>簡単な自己紹介・経歴</li>
+      <li>ポートフォリオ（公開可能な制作実績）</li>
+      <li>各実績における担当範囲（デザイン／コーディング）</li>
+      <li>対応可能な言語・ツール（HTML/CSS/JS、Figma 等）</li>
+      <li>参考単価（コーディングのみ／デザイン＋コーディング）</li>
+      <li>LP1本あたりの制作期間の目安</li>
+      <li>平日の稼働時間・月間の対応可能件数</li>
+      <li>直近の稼働状況・着手可能時期</li>
+    </ul>
+
+    <div>
+      <a href="#" class="cta-btn">Kairosに相談・応募する</a>
+    </div>
+    <div class="foot-note">KAIROS — WEB PRODUCTION &amp; DEVELOPMENT TEAM</div>
+  </div>
+</section>
+
+<footer>
+  © Kairos — Proposal for LP Coding Partnership
+</footer>
+
+</body>
+</html>
